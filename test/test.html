@@ -1,0 +1,458 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no"> 
+	<title>Document</title>
+	
+	<style>
+	*{
+		margin: 0px;
+		padding: 0px;
+	}
+	header{
+		width: 100%;
+		height: 60px;
+		background-color: #59DAE5;
+		line-height: 60px;
+		/*position: absolute;*/
+		position: absolute;
+		z-index: 999999999;
+		overflow: hidden;
+	}
+	.h1-1{
+		font-size: 18px;
+		color: #000;
+		font-weight: bold;
+		display: inline-block;
+		margin-left: 10px;
+	}
+	.h1-2{
+		width: 60%;
+		display: inline-block;
+		margin-left: 20%;
+	}
+	.h1-2 input{
+		margin: 0;
+		padding: 0px;
+		width: 100%;
+		height: 40px;
+		outline: none;
+		border: none;
+		font-size: 38px;
+	}
+	.hq{
+		width: 60%;
+		position: absolute;
+		top: 0px;
+		z-index: 99999;
+		background-color: red;
+		transform:translate3d(-100%,0,0);
+		transition:transform 1s;
+	}
+	.zz{
+		width: 100%;
+		position: absolute;
+		top: 0px;
+		z-index: 99955;
+		transform:translate3d(0,0,0);
+		display: none;
+	}
+	</style>
+
+</head>
+<body>
+
+<header>
+	<div class="h1-1">三</div>
+	<div class="h1-2">
+		<input type="text">	
+	</div>
+</header>	
+
+<div class="hq">
+	
+</div>
+<div class="zz">
+	
+</div>
+	
+</body>
+</html>
+<script>
+	var hq=document.querySelector('.hq');
+	var zz=document.querySelector('.zz');
+	var qq=document.documentElement.clientHeight;
+	var hh=document.querySelector('header');
+	hq.style.height=qq+'px';
+	zz.style.height=qq+'px';
+	var menu=document.querySelector('.h1-1');
+	menu.addEventListener('touchstart',function(){
+		if(zz.style.display=='none'){
+			hq.style.transform='translate3d(0,0,0)';
+			zz.style.display='block';
+			hh.style.width=60+'px';
+		}else{
+			hq.style.transform='translate3d(-100%,0,0)';
+		zz.style.display='none';
+		hh.style.width=100+'%';
+		}
+		
+	});
+	zz.addEventListener('touchstart',function(){
+		hq.style.transform='translate3d(-100%,0,0)';
+		zz.style.display='none';
+		hh.style.width=100+'%';
+	});
+</script> -->
+<!-- 2222222222222222222222222222222 -->
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no"> 
+	<title>Document</title>
+	<style>
+	*{
+		margin: 0px;
+		padding: 0px;
+	}
+	footer{
+		width: 100%;
+		height: 60px;
+		background-color: rgba(0,0,0,0.8);
+		position: fixed;
+		bottom: 0px;
+		z-index: 9999999999;
+	}
+	.f-1{
+		width: 33.3333%;
+		height: 100%;
+		float: left;
+		font-size: 30px;
+		color: #fff;
+		text-align: center;
+		line-height: 60px;
+	}
+	.f-1:nth-child(2){
+		border-left: 1px solid #ff3;
+		border-right: 1px solid #ff3;
+		box-sizing:border-box;
+	}
+	.b{
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		transition:all 1s;
+	}
+	.b-1{
+		width: 100%;
+		height: 100%;
+		background-color: red;
+		float:left;
+	}
+	.b-1:nth-child(2){
+		background-color: blue;
+	}
+	.b-1:nth-child(3){
+		background-color: pink;
+	}
+	.f-1:nth-child(1){
+		background-color: blue;
+	}
+	</style>
+</head>
+<body>
+
+
+
+
+
+	<footer>
+		<div class="f-1">首页</div>
+		<div class="f-1">热点</div>
+		<div class="f-1">个人主页</div>
+	</footer>
+
+
+	<div class="b">
+		<div class="b-1">1</div>
+		<div class="b-1">2</div>
+		<div class="b-1">3</div>
+	</div>
+
+
+</body>
+</html>
+<script>
+	var bb=document.querySelectorAll('.b-1');
+	var bbh1=document.querySelector('.b');
+	var sq=document.documentElement.clientHeight;
+	// alert(sq);
+	var wq=document.documentElement.clientWidth;
+	for(var i=0;i<bb.length;i++){
+		bb[i].style.height=sq+'px';
+		bb[i].style.width=wq+'px';
+	}
+	// bbh1.style.width=3*wq+'px';
+	// bbh1.style.height=sq+'px';
+	var arr=[0,wq,wq*2];
+	var btnf=document.querySelectorAll('.f-1');
+	for(var j=0;j<btnf.length;j++){
+		btnf[j].indexs=j;
+		btnf[j].addEventListener('touchstart',function(){
+			bbh1.style.left='-'+arr[this.indexs]+'px';
+			for(var n=0;n<btnf.length;n++){
+				btnf[n].style.backgroundColor='rgba(0,0,0,0.8)';
+			}
+			this.style.backgroundColor='blue';
+		});
+	}
+</script>
+
+ -->
+ <!-- 333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333 -->
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+ 	<meta charset="UTF-8">
+ 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no"> 
+ 	<title>Document</title>
+ 	<style>
+	*{
+		margin: 0px;
+		padding: 0px;
+	}
+	a{
+		-webkit-tap-highlight-color:transparent;
+		text-decoration: none;
+	}
+	.b-box a img{
+		width: 100%;
+		font-size: 0px;
+	}
+	.b-box a{
+		width: 100%;
+		display: block;
+		float: left;
+		
+	}
+	.b-box{
+		line-height: 0px;
+		position: absolute;
+		top: 0px;
+	}
+	.b-box:before,.b-box:after{
+		content: '';
+		display: block;
+		width: 0px;
+		line-height: 0px;
+		clear: both;
+	}
+	.barner{
+		width: 100%;
+		height: auto;
+		position: relative;
+		overflow: hidden;
+	}
+	header{
+		width: 100%;
+		height: 60px;
+		background-color:#226688;
+		text-align: center;
+		line-height: 60px;
+		font-size: 35px;
+		color: #fff;
+	}
+	.ul-box{
+		background-color: #fff;
+		box-shadow: 2px 0px 10px #000;
+		width: 100%;
+		height: 80px;
+		margin: 0px;
+		padding: 0px;
+		position: fixed;
+		bottom: 0px;
+		left: 0px;
+	}
+	.ul-box li{
+		list-style: none;
+		width: 25%;
+		height: 100%;
+		border-right: 1px solid #ccc;
+		float: left;
+		box-sizing:border-box;
+		text-align: center;
+		line-height: 80px;
+		font-size: 18px;
+		font-weight: bold;
+	}
+	.ul-box li:hover{
+		background-color: red;
+		color: #fff
+	}
+	.ul-box li:nth-child(1){
+		background-color: red;
+		color: #fff;
+	}
+	.ul-box li:last-child{
+		border: none;;
+	}
+ 	</style>
+ </head>
+ <body>
+ 	<header>
+ 		商城
+ 	</header>
+	<section class='barner'>
+		<div class="b-box">
+			<a href="javascript:;">
+				<img src="1.jpeg" alt="">
+			</a>
+			<a href="javascript:;">
+				<img src="2.jpg" alt="">
+			</a>
+			<a href="javascript:;">
+				<img src="3.jpeg" alt="">
+			</a>
+			<a href="javascript:;">
+				<img src="4.jpg" alt="">
+			</a>
+			<a href="javascript:;">
+				<img src="5.jpeg" alt="">
+			</a>
+		</div>
+	</section>
+
+	<ul class="ul-box">
+		<li>首页</li>
+		<li>商城</li>
+		<li>消息</li>
+		<li>个人主页</li>
+	</ul>
+
+ </body>
+ </html>
+
+ <script>
+var t1=window.setInterval(fnauto,1500);
+
+
+// 计算布局
+var a1=document.querySelector('.barner');
+var a2=document.querySelector('.b-box');
+var a3=document.querySelectorAll('.b-box a');
+var imgs=document.querySelectorAll('.b-box a img');
+var sum2=document.documentElement.clientWidth;
+a2.style.width=(sum2*imgs.length)+'px';
+for(var i=0;i<a3.length;i++){
+	a3[i].style.width=sum2+'px';
+}
+var b1=a2.offsetHeight;
+a1.style.height=200+'px';
+
+// 初始化
+var index=0;
+
+// 手机拖拽
+a2.addEventListener('touchstart',fn1);
+function fn1(e){
+	window.clearInterval(t1);
+	var touch=e.targetTouches[0];
+	var sx=touch.clientX;
+	a2.style.transition='';
+	var kstime=e.timeStamp;
+	var jstime=0;
+
+
+	// 滑动时
+	var ooo=0;
+	a2.addEventListener('touchmove',fn2);
+	function fn2(e){
+		var touch=e.targetTouches[0];
+		var mx=touch.clientX;
+		ooo=mx-sx;
+		if(ooo<0){
+			a2.style.left=ooo-(index*sum2)+'px';
+		}else{
+			a2.style.left=-(index*sum2)+ooo+'px';
+		}
+	}
+
+
+
+	// 触摸结束时
+	a2.addEventListener('touchend',fn3);
+	function fn3(e){
+		// 时间计算
+		jstime=e.timeStamp;
+		var sumtime=jstime-kstime;
+		if(sumtime<100){
+			if(ooo<0){
+				index++;
+			}
+			if(ooo>0){
+				index--;
+			}
+			if(index>=imgs.length){
+				index=imgs.length-1;
+			}
+			if(index<0){
+				index=0;
+			}
+			a2.style.transition='all 1s';
+			a2.style.left=-(index*sum2)+'px';
+		}else{
+			// 左右滑动
+			if(Math.abs(ooo)>(sum2/2)){
+				if(ooo<0){
+					index++;
+				}
+				if(ooo>0){
+					index--;
+				}
+				if(index>=imgs.length){
+					index=imgs.length-1;
+				}
+				if(index<0){
+					index=0;
+				}
+				a2.style.transition='all 1s';
+				a2.style.left=-(index*sum2)+'px';
+			}else{
+				a2.style.transition='all 1s';
+				a2.style.left=-(index*sum2)+'px';
+			}
+		}
+		t1=window.setInterval(fnauto,1500);
+		
+		// 重点清除浮动
+		a2.removeEventListener('touchmove',fn2);
+		a2.removeEventListener('touchend',fn3);
+	}
+}
+
+// 自动轮播
+a2.style.transition='all 1s';
+var index123=0;
+
+
+function fnauto(){
+	index123++;
+	if(index123>=imgs.length){
+		index123=0;
+	}
+	a2.style.left=-index123*sum2+'px';
+}
+
+
+// var ul=document.querySelector('.ul-box');
+// var ullis=document.querySelectorAll('.ul-box li');
+// ul.onclick=function(){
+// 	for(var i1=0;i1<ullis.length;i1++){
+// 		ullis[i1].style.backgroundColor='#fff';
+// 		ullis[i1].style.color='#000';
+// 	}
+	
+// }
+</script>
