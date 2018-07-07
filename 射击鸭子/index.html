@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>射杀鸭子</title>
+	<style>
+		body,html{
+			width: 100%;
+			height:100%;
+			margin:0px;
+		}
+		#can{
+			position:absolute;
+			left:0px;
+			top:0px;
+			right:0px;
+			bottom:0px; 
+			margin:auto;
+			cursor: crosshair;
+		}
+	</style>
+</head>
+<body>
+	<canvas id="can">
+		您的浏览器，不能支持。
+	</canvas>
+</body>
+</html>
+<script type="text/javascript">
+var self;
+	// 全局变量
+	function main(){
+		self=this;
+		this.clientwidth=document.documentElement.clientWidth;
+		this.clientheight=document.documentElement.clientHeight;
+		this.substance=document.getElementById("can");
+		this.canvas=this.substance.getContext("2d");
+		this.t1;
+		// 草属性
+		this.caolength=200;
+		this.caoarr=[];
+		// 枪属性
+		this.qiangarr={
+			x:this.clientwidth/2,
+			y:this.clientheight/2,
+		};
+		//鸭子属性
+		this.yaziarr=[];
+		this.namearrs=[
+			{
+				group1:"./img/niao.png",
+				group2:"./img/niaoleft2.png",
+			},
+			{
+				group1:"./img/niao1.png",
+				group2:"./img/niao1left2.png",
+			},
+		];
+		// 靶心属性
+		this.x=this.clientwidth/2;
+		this.y=this.clientheight/2;
+		// 声音属性
+		this.sy=[
+			{
+				time:1000,
+				file:"1.mp3",
+			},
+			{
+				time:500,
+				file:"2.mp3",
+			},
+		];
+		this.sy1=[
+			{
+				time:3000,
+				file:"11.mp3",
+			},
+			{
+				time:3000,
+				file:"12.mp3",
+			},
+		]
+	}
+	// 入口
+	main.prototype.begin=function(){
+			var self=this;
+			self.load();
+			self.event();
+	}
+	// 加载
+	main.prototype.load=function(){
+		var self=this;
+		self.substance.width=self.clientwidth;
+		self.substance.height=self.clientheight;
+		// 初始化草
+		for(var i=0;i<self.caolength;i++){
+			var ram=parseInt(Math.random()*2+1);
+			var x=parseInt(Math.random()*(self.clientwidth-100));
+			var y=parseInt(Math.random()*(self.clientheight/5)+(self.clientheight-(self.clientheight/3)));
+			self.caoarr[i]={
+				class:ram,
+				x:x,
+				y:y,
+			};
+		}
+		// 创建鸭子飞的数据
+		var ram=0;
+		do{
+			ram=parseInt(Math.random()*5);
+		}while(ram==0);
+		for(var i=0;i<ram;i++){
+			var r=parseInt(Math.random()*2);
+			var x=parseInt(Math.random()*(self.clientwidth-100));
+			var y=parseInt(Math.random()*(self.clientheight/5)+(self.clientheight-(self.clientheight/3)));
+			var vx=0,vy=0;
+			do{
+				vx=parseInt(Math.random()*5-2);
+				vy=parseInt(Math.random()*5)*(-1);
+			}while(vx==0||vy==0);
+			self.yaziarr[i]={
+				name:self.namearrs[r],
+				index:{
+					i:1,
+					name:self.namearrs[r].group1,
+				},
+				x:x,
+				y:y,
+				vx:vx,
+				vy:vy,
+				sy:self.sy1[parseInt(Math.random()*2)],
+			};
+		}
+		// 调用画布渲染
+		self.drawing();
+		// 计时器
+		t1=window.setInterval(self.js,100);
+		window.setInterval(self.pd,10);
+	}
+	// 计时判断鸟
+	main.prototype.pd=function(){
+		// 没有鸟添加鸟
+		if(self.yaziarr.length==0){
+			var ram=0;
+			do{
+				ram=parseInt(Math.random()*5);
+			}while(ram==0);
+			for(var i=0;i<ram;i++){
+				var r=parseInt(Math.random()*2);
+				var x=parseInt(Math.random()*(self.clientwidth-100));
+				var y=parseInt(Math.random()*(self.clientheight/5)+(self.clientheight-(self.clientheight/3)));
+				var vx=0,vy=0;
+				do{
+					vx=parseInt(Math.random()*5-2);
+					vy=parseInt(Math.random()*5)*(-1);
+				}while(vx==0||vy==0);
+				self.yaziarr[i]={
+					name:self.namearrs[r],
+					index:{
+						i:1,
+						name:self.namearrs[r].group1,
+					},
+					x:x,
+					y:y,
+					vx:vx,
+					vy:vy,
+					sy:self.sy1[parseInt(Math.random()*2)],
+				};
+			}
+		}else{
+			// 声音叫
+			var sss=parseInt(Math.random()*780);
+			if(sss==0){
+				var r=parseInt(Math.random()*self.yaziarr.length);
+				var audio=document.createElement("audio");
+				audio.autoplay="autoplay";
+				audio.loop="loop";
+				audio.src="./audio/"+self.yaziarr[r].sy.file;
+				audio.controls="none";
+				self.substance.appendChild(audio);
+				window.setTimeout(function(){
+					self.substance.removeChild(audio);
+				},self.yaziarr[r].sy.time);
+			}
+		}
+		// 消除死的鸭子
+		for(var i=0;i<self.yaziarr.length;i++){
+			if(self.yaziarr[i].index.i==999){
+				if(self.yaziarr[i].y>=self.clientheight-200){
+					self.yaziarr.splice(i,1);
+				}
+			}
+		}
+	}
+	// 计时器
+	main.prototype.js=function(){
+		// 修改数据
+		// 渲染鸭子数据
+		for(var i=0;i<self.yaziarr.length;i++){
+			self.yaziarr[i].x+=self.yaziarr[i].vx;
+			self.yaziarr[i].y+=self.yaziarr[i].vy*2;
+			if(self.yaziarr[i].index.i==1){
+				self.yaziarr[i].index.i=2;
+				self.yaziarr[i].index.name=self.yaziarr[i].name.group2;
+			}else if(self.yaziarr[i].index.i==2){
+				self.yaziarr[i].index.i=1;
+				self.yaziarr[i].index.name=self.yaziarr[i].name.group1;
+			}
+			if(self.yaziarr[i].y<=-100){
+				self.yaziarr.splice(i,1);
+			}
+			if(self.yaziarr[i].x<=(-100)||self.yaziarr[i].x>=self.clientwidth+100){
+				self.yaziarr.splice(i,1);
+			}
+		}
+		// 调用画布
+		self.drawing();
+		
+	}
+	// 渲染视觉
+	main.prototype.drawing=function(){
+		var self=this;
+		// 清除画布
+		self.canvas.clearRect(0,0,self.clientwidth,self.clientheight);
+		// 背景渲染
+		self.canvas.beginPath();
+		var img=new Image();
+		img.src="./img/back.jpg";
+		self.canvas.drawImage(img,0,0,self.clientwidth,self.clientheight);
+		self.canvas.closePath();
+		// 渲染鸭子
+		for(var i=0;i<self.yaziarr.length;i++){
+			self.canvas.beginPath();
+			var img=new Image();
+			img.src=self.yaziarr[i].index.name;
+			self.canvas.drawImage(img,self.yaziarr[i].x,self.yaziarr[i].y,200,200);
+			self.canvas.closePath();
+		}
+		// 渲染草
+		for(var i=0;i<self.caolength;i++){
+			self.canvas.beginPath();
+			var img=new Image();
+			if(self.caoarr[i].class==1){
+				img.src="./img/cao.png";
+			}else{
+				img.src="./img/cao1.png";
+			}
+			self.canvas.drawImage(img,self.caoarr[i].x,self.caoarr[i].y,100,100);
+			self.canvas.closePath();
+		}
+		// 渲染目标和枪
+		// 渲染目标
+		if(!(self.x<=50)&&!(self.x>=self.clientwidth-50)){
+			self.canvas.beginPath();
+			self.canvas.arc(self.x,self.y,30,0,Math.PI*2);
+			self.canvas.lineWidth="3";
+			self.canvas.strokeStyle='red';
+			self.canvas.stroke();
+			self.canvas.closePath();
+			self.canvas.beginPath();
+			self.canvas.arc(self.x,self.y,50,0,Math.PI*2);
+			self.canvas.lineWidth="5";
+			self.canvas.strokeStyle='#000';
+			self.canvas.stroke();
+			self.canvas.closePath();
+			self.canvas.beginPath();
+			self.canvas.moveTo(self.x,self.y-50);
+			self.canvas.lineTo(self.x,self.y+50);
+			self.canvas.lineWidth="1";
+			self.canvas.strokeStyle='red';
+			self.canvas.stroke();
+			self.canvas.closePath();
+			self.canvas.beginPath();
+			self.canvas.moveTo(self.x+50,self.y);
+			self.canvas.lineTo(self.x-50,self.y);
+			self.canvas.lineWidth="1";
+			self.canvas.strokeStyle='#000';
+			self.canvas.stroke();
+			self.canvas.closePath();
+		}else if(self.x<=50){
+			self.canvas.beginPath();
+			self.canvas.arc(50,self.y,30,0,Math.PI*2);
+			self.canvas.lineWidth="3";
+			self.canvas.strokeStyle='red';
+			self.canvas.stroke();
+			self.canvas.closePath();
+			self.canvas.beginPath();
+			self.canvas.arc(50,self.y,50,0,Math.PI*2);
+			self.canvas.lineWidth="5";
+			self.canvas.strokeStyle='#000';
+			self.canvas.stroke();
+			self.canvas.closePath();
+			self.canvas.beginPath();
+			self.canvas.moveTo(50,self.y-50);
+			self.canvas.lineTo(50,self.y+50);
+			self.canvas.lineWidth="1";
+			self.canvas.strokeStyle='red';
+			self.canvas.stroke();
+			self.canvas.closePath();
+			self.canvas.beginPath();
+			self.canvas.moveTo(0,self.y);
+			self.canvas.lineTo(100,self.y);
+			self.canvas.lineWidth="1";
+			self.canvas.strokeStyle='#000';
+			self.canvas.stroke();
+			self.canvas.closePath();
+		}else if(self.x>=self.clientwidth-50){
+			self.canvas.beginPath();
+			self.canvas.arc(self.clientwidth-50,self.y,30,0,Math.PI*2);
+			self.canvas.lineWidth="3";
+			self.canvas.strokeStyle='red';
+			self.canvas.stroke();
+			self.canvas.closePath();
+			self.canvas.beginPath();
+			self.canvas.arc(self.clientwidth-50,self.y,50,0,Math.PI*2);
+			self.canvas.lineWidth="5";
+			self.canvas.strokeStyle='#000';
+			self.canvas.stroke();
+			self.canvas.closePath();
+			self.canvas.beginPath();
+			self.canvas.moveTo(self.clientwidth-50,self.y-50);
+			self.canvas.lineTo(self.clientwidth-50,self.y+50);
+			self.canvas.lineWidth="1";
+			self.canvas.strokeStyle='red';
+			self.canvas.stroke();
+			self.canvas.closePath();
+			self.canvas.beginPath();
+			self.canvas.moveTo(self.clientwidth-100,self.y);
+			self.canvas.lineTo(self.clientwidth,self.y);
+			self.canvas.lineWidth="1";
+			self.canvas.strokeStyle='#000';
+			self.canvas.stroke();
+		}
+		// 渲染枪
+		self.canvas.beginPath();
+		var img=new Image();
+		img.src="./img/qiang.png";
+		self.canvas.drawImage(img,self.qiangarr.x,self.qiangarr.y,self.clientwidth/2,self.clientheight/2);
+		self.canvas.closePath();
+	}
+	// 事件
+	main.prototype.event=function(){
+		var self=this;
+		// 接收鼠标事件
+		window.addEventListener("mousemove",function(e){
+			var x=e.offsetX;
+			var y=e.offsetY;
+			// 点击
+			window.onclick=function(){
+				// 爆炸特效
+				self.canvas.beginPath();
+				var img=new Image();
+				img.src="./img/baozao.gif";
+				self.canvas.drawImage(img,self.x-50,self.y-50,100,100);
+				self.canvas.closePath();
+				// 创建音频消除音频
+				var audio=document.createElement("audio");
+				audio.autoplay="autoplay";
+				audio.loop="loop";
+				var r1=0;
+				audio.src="./audio/"+self.sy[r1].file;
+				audio.controls="none";
+				self.substance.appendChild(audio);
+				window.setTimeout(function(){
+					self.substance.removeChild(audio);
+				},self.sy[r1].time);
+				// 判断打击
+				for(var i=0;i<self.yaziarr.length;i++){
+					var x1=self.yaziarr[i].x+100;
+					var y1=self.yaziarr[i].y+100;
+					var xx1=Math.pow(Math.abs(x-x1),2);
+					var yy1=Math.pow(Math.abs(y-y1),2);
+					var sum=parseInt(Math.sqrt(xx1+yy1));
+					if(sum<=50){
+						self.yaziarr[i].vx=0;
+						self.yaziarr[i].vy=5;
+						self.yaziarr[i].index.i=999;
+						self.yaziarr[i].index.name="./img/niaosi.png";
+					}
+				}
+			}
+			// 双击
+			window.onmousedown=function(){
+				// 添加事件
+				window.addEventListener("mousemove",self.fn1,false);
+				// 删除事件
+				window.onmouseup=function(){
+					window.removeEventListener("mousemove",self.fn1);
+				}
+			}
+			// 靶心
+			self.x=x;
+			self.y=y;
+			// 枪口上下移动
+			self.qiangarr.y=self.qiangarr.y+((self.clientheight/2-y)*0.00000002);
+			// 枪口左右移动
+			if(x<=self.clientwidth-300){
+				self.qiangarr.x=x-200;
+			}
+		},false);
+	}
+	// 事件
+	main.prototype.fn1=function(){
+		// 爆炸特效
+		var rrr=parseInt(Math.random()*5);
+		if(rrr==2){
+			self.canvas.beginPath();
+			var img=new Image();
+			img.src="./img/baozao.gif";
+			self.canvas.drawImage(img,self.qiangarr.x+200,self.qiangarr.y+140,100,100);
+			self.canvas.closePath();
+		}
+		// 创建音频消除音频
+		var audio=document.createElement("audio");
+		audio.autoplay="autoplay";
+		audio.loop="loop";
+		var r1=1;
+		audio.src="./audio/"+self.sy[r1].file;
+		audio.controls="none";
+		self.substance.appendChild(audio);
+		window.setTimeout(function(){
+			self.substance.removeChild(audio);
+		},self.sy[r1].time);
+		// 判断打击
+		for(var i=0;i<self.yaziarr.length;i++){
+			var x1=self.yaziarr[i].x+100;
+			var y1=self.yaziarr[i].y+100;
+			var xx1=Math.pow(Math.abs(self.x-x1),2);
+			var yy1=Math.pow(Math.abs(self.y-y1),2);
+			var sum=parseInt(Math.sqrt(xx1+yy1));
+			if(sum<=50){
+				self.yaziarr[i].vx=0;
+				self.yaziarr[i].vy=5;
+				self.yaziarr[i].index.i=999;
+				self.yaziarr[i].index.name="./img/niaosi.png";
+			}
+		}
+	}
+	// 开始游戏
+	var play=new main();
+	play.begin();
+</script>
