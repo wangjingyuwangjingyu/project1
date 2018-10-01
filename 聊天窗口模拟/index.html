@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>聊天窗口</title>
+	<style type="text/css">
+		*{
+			margin: 0px;
+			padding: 0px;
+		}
+		.bigbox{
+			width: 300px;
+			height: 800px;
+			box-shadow: 5px 5px rgba(23,23,23,0.1);
+			overflow: hidden;
+			position: relative;
+			/*overflow-y: scroll;*/
+			margin: auto;
+		}
+		header,footer,section{
+			width: 100%;
+		}
+		header,footer{
+			position: absolute;
+		}
+		header{
+			height: 120px;
+			background: #4f8dfe;
+			top: 0px;
+			left: 0px;
+
+		}
+		footer{
+			height: 60px;
+			background: #4f8dfe;
+			bottom: 0px;
+			left: 0px;
+		}
+		section{
+			position: absolute;
+			top: 120px;
+			left: 0px;
+			height: 620px;
+			overflow-y: scroll;
+		}
+		.touxiang{
+			width: 60px;
+			height: 60px;
+			position: absolute;
+			top: 30px;
+			overflow: hidden;
+			left: 20px;
+			border-radius: 100%;
+			font-size: 0px;
+		}
+		.touxiang img{
+			font-size: 0px;
+			display: inline-block;
+			line-height: 60px;
+			height:60px;
+			margin-left: -15px;
+			cursor: pointer;
+		}
+		.text{
+			color: #fff;
+			float:left;
+			margin-top: 30px;
+			margin-left: 120px;
+			font-size: 18px;
+			width: 160px;
+			height: 75px;
+			overflow: hidden;
+		}
+		.b1{
+			/*color: */
+			width: 100%;
+			overflow:hidden;
+			font-size: 14px;
+			margin-top: 10px;
+			height: 40px;
+		}
+		.minbox{
+			width: 100%;
+			height: 575px;
+			overflow: hidden;
+			transition:height 0.2s;
+		}
+		.superminbox{
+			width: 100%;
+			height: 80px;
+			/*background: #eee;*/
+			overflow: hidden;
+		}
+		.hytx{
+			width: 60px;
+			height: 60px;
+			overflow: hidden;
+			float: left;
+			margin-top: 10px;
+			margin-left: 10px;
+			border-radius: 100%;
+			display: block;
+		}
+		.hytx img{
+			display: inline-block;
+			font-size: 0px;
+			line-height: 0px;
+			height: 100%;
+			margin-left: -20px;
+			cursor: pointer;
+		}
+		.hytxt img{
+			margin-left: -40px;
+		}
+		.beizhu{
+			height: 30px;
+			float: left;
+			margin-top: 20px;
+			margin-left: 30px;
+		}
+		.beizhu span,.beizhu p{
+			display: inline-block;
+			font-size: 14px;
+		}
+		.dian{
+			background: green;
+			border-radius: 100%;
+			width: 10px;
+			height: 10px;
+		}
+		.dian1{
+			background: red;
+		}
+		.label{
+			width: 100%;
+			height: 30px;
+			font-size: 14px;
+		}
+		.wenzi{
+			width: 100%;
+			height: 100%;
+			line-height: 30px;
+			display: inline-block;
+			box-sizing: border-box;
+			padding-left: 10px;
+			/*border-bottom: 1px solid #ccc;*/
+			border-top: 1px solid #eee;
+			box-shadow: 2px 1px #eee;
+			cursor: pointer;
+		}
+		.dongxiao{
+			float: right;
+			margin-right: 10px;
+		}
+		.superminbox:hover{
+			background: #eee;
+			cursor: pointer;
+		}
+		.xgtx{
+			width:100%;
+			height:20px;
+			position:absolute;
+			z-index:999999;
+			top:20px;
+			font-size: 14px;
+			background:rgba(0,0,0,0.5);
+			color:#fff;
+			cursor: pointer;
+		}
+		.wenbenyangshi{
+			width: 500px;
+			position: fixed;
+			height: 500px;
+			z-index: 9999999999999;
+			top: 0px;
+			left: 0px;
+			right: 0px;
+			bottom: 0px;
+			margin: auto;
+			background: #fff;
+			border:2px solid #eee;
+			overflow: hidden;
+			border-radius: 10px;
+		}
+		.xiaobox{
+			display: inline-block;
+			width: 280px;
+			height: 280px;
+			float: left;
+			margin-left: 100px;
+			margin-top:20px;
+			background: #eee;
+			border-radius: 100%;
+			border:1px solid #ccc;
+		}
+		.xuanbox{
+			width: 100%;
+			height: 200px;
+			display: block;
+		}
+		.xuanbox img{
+			display: inline-block;
+			height: 120px;
+			cursor: pointer;
+			position: relative;
+			float: left;
+			margin-top: 40px;
+			margin-left: 10px;
+			margin-right: 10px;
+			border:5px solid #ccc;
+			transition: width 0.3s,height 0.3s;
+		}
+		.submit{
+			position: absolute;
+			bottom:200px;
+			font-size: 14px;
+			left:350px;
+			border-radius: 10px;
+			color: #fff;
+			cursor: pointer;
+			padding: 5px 10px;
+			background: #f74528;
+		}
+		.liaotianbigbox{
+			width: 500px;
+			height: 700px;
+			background: #4f8dfe;
+			position: absolute;
+			top:100px;
+			left: 800px;
+			border-radius: 5px;
+		}
+		.liaotiantop{
+			width: 450px;
+			height: 480px;
+			margin-left: 25px;
+			margin-top: 45px;
+			background: #fff;
+			border-radius: 10px;
+			overflow: hidden;
+			overflow-y: scroll;
+		}
+		.liaotianbootom{
+			width: 440px;
+			height: 80px;
+			background: #fff;
+			margin-top: 5px;
+			margin-left: 25px;
+			cursor: text;
+			display: block;
+			padding: 5px;
+			border-bottom-left-radius: 10px;
+			border-bottom-right-radius: 10px; 
+		}
+		#p1{
+			float: right;
+			margin-top: 7px;
+			margin-right: 7px;
+		}
+		#close,#minsize{
+			display: inline-block;
+			width: 30px;
+			height: 30px;
+			text-align: center;
+			line-height: 30px;
+			background:red;
+			color: #fff;
+			cursor: pointer;
+		}
+		#minsize{
+			background: #fff;
+			color: #000;	
+			margin-right: 10px;
+		}
+		.informationandname{
+			color: #fff;
+			margin-top: 10px;
+			margin-left: 20px;
+			float: left;
+		}
+		.send{
+			width: 100px;
+			height: 30px;
+			font-size: 16px;
+			color: #fff;
+			background: red;
+			border-radius: 30px; 
+			float: right;
+			margin-top: 5px;
+			margin-right: 25px;
+  			text-align: center;
+			display: block;
+			line-height: 30px;
+			cursor: pointer;
+		}
+		.timechushi{
+			font-size: 12px;
+		}
+		.liaotianimg{
+			height: 20px;
+			width: 20px;
+			display: inline-block;
+			border-radius: 100%;
+			overflow: hidden;
+		}
+		.liaotianimg img{
+			height: 100%;
+			margin-left: -5px;
+		}
+		.util{
+			width: 450px;
+			height: 30px;
+			background: #ccc;
+			display:block;
+			margin: 0 auto;
+			margin-top: 8px;
+		}
+		.util img{
+			height: 20px;
+			display: block;
+			font-size: 0px;
+			line-height: 0px;
+			float: left;
+			margin-left: 10px;
+			margin-top: 5px;
+			cursor: pointer;
+		}
+	</style>
+</head>
+<body>
+	<div class="bigbox">
+		<header>
+			<div class="touxiang">
+				<img src="./1.jpg">
+			</div>
+			<div class="text">
+				<p>天天</p>
+				<span class="b1">
+					<span class="b2">
+						个性签名
+					</span>
+					<span id="gxqm">
+						涵盖Java、JAVA大数据、Android、iOS、PHP、软件测试、嵌入式、C++、C#、UID、UED、产品经理、Linux云计算、Web前端、VR、网络营销、高级电商、主办会计等20余门课程体系。
+					</span>
+				</span>
+			</div>
+		</header>
+		<section>
+			<div class="box">
+				<div class="minbox">
+					<div class="label">
+						<span class="wenzi">我的好友<span class="dongxiao">&gt;</span></span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./2.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./3.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./4.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian dian1"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./5.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx hytxt">
+							<img src="./6.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian dian1"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./7.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./8.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+				</div>
+				<div class="minbox">
+					<div class="label">
+						<span class="wenzi">熟人<span class="dongxiao">&gt;</span></span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./2.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./3.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./4.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian dian1"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./5.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx hytxt">
+							<img src="./6.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian dian1"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./7.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./8.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+				</div><div class="minbox">
+					<div class="label">
+						<span class="wenzi">朋友<span class="dongxiao">&gt;</span></span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./2.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./3.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./4.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian dian1"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./5.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx hytxt">
+							<img src="./6.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian dian1"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./7.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./8.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+				</div><div class="minbox">
+					<div class="label">
+						<span class="wenzi">家人<span class="dongxiao">&gt;</span></span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./2.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./3.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./4.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian dian1"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./5.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx hytxt">
+							<img src="./6.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian dian1"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./7.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./8.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+				</div>
+				<div class="minbox">
+					<div class="label">
+						<span class="wenzi">同事<span class="dongxiao">&gt;</span></span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./2.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./3.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./4.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian dian1"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./5.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx hytxt">
+							<img src="./6.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian dian1"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./7.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./8.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+				</div>
+				<div class="minbox">
+					<div class="label">
+						<span class="wenzi">妹妹们<span class="dongxiao">&gt;</span></span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./2.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./3.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./4.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian dian1"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./5.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx hytxt">
+							<img src="./6.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian dian1"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./7.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+					<div class="superminbox">
+						<span class="hytx">
+							<img src="./8.jpg">
+						</span>
+						<span class="beizhu">
+							<span>昵称</span>
+							<p>梦梦</p>
+							<div class="zhuantai">
+								<span class="dian"></span>
+								<span class="ztt">在线</span>
+							</div>
+						</span>
+					</div>
+				</div>
+			</div>
+		</section>
+		<footer>
+
+		</footer>
+	</div>
+</body>
+</html>
+<script type="text/javascript" src="./jquery-1.4.2.js"></script>
+<script type="text/javascript">
+	window.onload=function(){
+		(function(){
+			var minboxs=document.getElementsByClassName("minbox");
+			var labels=document.getElementsByClassName("label");
+			var superminboxs=document.getElementsByClassName("superminbox");
+			for(var i=0;i<minboxs.length;i++){
+				minboxs[i].style.height="30px";
+			}
+			// for(var i=0;i<minboxs.length;i++){
+			// 	labels[i].index=i;
+			// 	labels[i].onclick=function(){
+			// 		var heightflag=minboxs[this.index].style.height;
+			// 		if(heightflag=="30px"){
+			// 			minboxs[this.index].style.height="575px";
+			// 		}else{
+			// 			minboxs[this.index].style.height="30px";
+			// 		}
+			// 	}
+
+			// }
+			for(var i=0;i<labels.length;i++){
+				labels[i].index=i;
+				$(labels[i]).click(function(){
+					var attrh=minboxs[this.index].style.height;
+					if(attrh=="30px"){
+						$(minboxs[this.index]).height("575px");
+					}else{
+						$(minboxs[this.index]).height("30px");
+					}
+				});
+			}
+			$(".touxiang").hover(function(){
+				var div=$(this).append("<div class='xgtx'>修改头像</div>");
+				$(".xgtx").click(function(){
+					$("body").append("<div class='wenbenyangshi'><span class='xiaobox'></span><span class='xuanbox'><img src='./1.jpg'><img src='./2.jpg'><img src='./3.jpg'></span><div class='submit'>确认修改头像</div><div>");
+					$(".xuanbox img").click(function(){
+						$(".xiaobox").css({"background-image":" url("+$(this).attr("src")+")","background-size":"auto 100%","background-position":"-60px 0px"});
+					});
+					$(".submit").click(function(){
+						var url=$(".xiaobox").css("background-image").split("\"")[1];
+						$(".touxiang img").attr("src",url);
+						$("body")[0].removeChild($(".wenbenyangshi")[0]);
+					});
+				});
+			},function(){
+				for(var i=0;i<$(".xgtx").length;i++){
+					$(this)[0].removeChild($(".xgtx")[i]);
+				}
+			});
+			$("#gxqm").click(function(){
+				var v=$(this).text();
+				$(".text").append("<input value="+v+" type='text' id='input' >");
+				$(this).css({"display":"none"});
+				$("#input").blur(function(){
+					var n=$("#input")[0].value;
+					console.dir(n);
+					$("#gxqm").css({"display":"block"})[0].innerText=n;
+					$(".text")[0].removeChild($("#input")[0]);
+				});
+			});
+			//聊天
+			$(".superminbox").click(function(){
+				var name=$(this).find(".beizhu p")[0].innerText;
+				$(".bigbox").css({"margin-left":"200px"});
+				$("body").append("<div class='liaotianbigbox'>"+
+					"<div id='p1'><span id='minsize'>-</span><span id='close'>X</span></div>"+
+					"<div class='informationandname'>正在与 <span style='color:red;'>"+name+"</span> 聊天 </div>"+
+					"<div class='liaotiantop'>"+
+					"</div>"+
+					"<div class='util'><img src='./下载 (1).png'><img src='./下载 (2).png'><img src='./下载.png'></div>"+
+					"<textarea type='text' value='' placeholder='请输入聊天内容......' class='liaotianbootom'>"+
+					"</textarea>"+
+					"<div class='send'>发送消息</div>"+
+					"</div>");
+				$("#close").click(function(){
+					$("body")[0].removeChild($(this).parent().parent()[0]);
+					$(".bigbox").css({"margin-left":"auto"});
+				});
+				$(".send").click(function(){
+					var imgsrc=$(".touxiang img").attr("src");
+					var value=$(".liaotianbootom")[0].value;
+					var name="<br/><div class='liaotianimg'><img src='"+imgsrc+"'></div>"+$(".text p")[0].innerText+"&nbsp;&nbsp;&nbsp;&nbsp;"+"<span class='timechushi'>"+(new Date())+"</span>";
+					var text=name+"<br/>"+value;
+					$(".liaotiantop")[0].innerHTML=$(".liaotiantop")[0].innerHTML+text;
+					$(".liaotianbootom")[0].value="";
+				});
+			});
+			window.onkeydown=function(e){
+				var event=window.event||e?window.event:e;
+				var keycode=event.keyCode;
+				if(keycode==13){
+						var imgsrc=$(".touxiang img").attr("src");
+						var value=$(".liaotianbootom")[0].value;
+						var name="<br/><div class='liaotianimg'><img src='"+imgsrc+"'></div>"+$(".text p")[0].innerText+"&nbsp;&nbsp;&nbsp;&nbsp;"+"<span class='timechushi'>"+(new Date())+"</span>";
+						var text=name+"<br/>"+value;
+						$(".liaotiantop")[0].innerHTML=$(".liaotiantop")[0].innerHTML+text;
+						$(".liaotianbootom")[0].value="";
+				}
+			}
+		})()
+	}
+</script>

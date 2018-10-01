@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>
+		模拟员工信息管理系统
+	</title>
+	<style type="text/css">
+		*{
+			margin: 0px;
+			padding: 0px;
+		}
+		header{
+			width: 100%;
+			height: 100px;
+			font-size: 60px;
+			text-align: center;
+			line-height: 100px;
+			font-weight: bold;
+		}
+		table{
+			width: 1200px;
+			margin: 0px auto;
+			box-shadow: 10px 10px #ccc;
+		}
+		table tr th{
+			font-size: 24px;
+		}
+		table tr td:first-child input[type='checkbox'],table tr th:first-child input[type='checkbox']{
+			width: 30px;
+			height: 30px;
+		}
+		td,th{
+			padding: 10px;
+			text-align: center;
+			border: 1px solid #000;
+		}
+		td{
+			font-size: 18px;
+		}
+		input[name="quanxuan"]{
+			    vertical-align: middle;
+		}
+		table tr:first-child th:nth-child(1) span{
+			height: 100%;
+			vertical-align: middle;
+			display: inline-block;
+			margin-right: 10px;
+		}
+		#delete{
+			background: red;
+			color: #fff;
+			padding: 10px 30px;
+			line-height: 30px;
+			font-size: 30px;
+			text-align: center;
+			margin: 0 auto;
+			margin-top: 20px;
+			margin-bottom: 20px;
+			width: 120px;
+			border-radius: 15px;
+			display: block;
+			text-decoration: none;
+		}
+		.tongyongstyle{
+			width: 1200px;
+		}
+		.tongyongstyle div{
+			display: inline-block;
+			margin-right: 20px;
+		}
+		.tongyongstyle div span:first-child{
+			font-size: 20px;
+			vertical-align: middle;
+			margin-right: 10px;
+		}
+		.tongyongstyle div span:last-child{
+			font-size: 18px;
+			vertical-align: middle;
+		}
+		.tongyongstyle{
+			display: block;
+			margin: 0px auto;
+			margin-bottom: 20px;
+			margin-top: 10px;
+		}
+		.tongyongstyle div:last-child span button{
+			padding: 10px;
+			border-radius: 20px;
+			font-size: 18px;
+		}
+		.tongyongstyle div span:last-child input[type='text']{
+			padding: 3px 10px;
+		}
+	</style>
+	<script type="text/javascript" src="./jquery-1.4.2.js"></script>
+	<script type="text/javascript">
+			$(window).load(function(){
+				//添加数据
+				$("#buttonadd").click(function(){
+					var id=$(".add").find("div:first-child span:last-child input[type='text']").val().trim();
+					var name=$(".add").find("div:nth-child(2) span:last-child input[type='text']").val().trim();
+					var email=$(".add").find("div:nth-child(3) span:last-child input[type='text']").val().trim();
+					var gongzi=$(".add").find("div:nth-child(4) span:last-child input[type='text']").val().trim();
+					if(id==""||name==""||email==""||gongzi==""){
+						alert("数据不能为空");
+						return;
+					}
+					$("table").append("<tr><td><input type='checkbox' name=''></td><td>"+id+"</td><td>"+name+"</td><td>"+email+"</td><td>"+gongzi+"</td></tr>");
+				});
+				//删除数据
+				$("table tr:first-child th:first-child input[name='quanxuan']").click(function(){
+					var flag=this.checked;
+					$("table tr td:first-child input[type='checkbox']").each(function(){
+						this.checked=flag;
+					});
+				});
+				$("#delete").click(function(){
+					var flag=$("table tr:first-child th:first-child input[name='quanxuan']")[0].checked;
+					if(flag){
+						$("table tr td:first-child input[type='checkbox']").each(function(){
+							$(this).parent().parent().remove();
+						});
+					}else{
+						$("table tr td:first-child input[type='checkbox']").each(function(){
+							if(this.checked){
+								$(this).parent().parent().remove();
+							}
+						});
+					}
+				});
+				//修改数据
+				$("#buttonupdate").click(function(){
+					var id=$(".updatedata").find("div:first-child span:last-child input[type='text']").val().trim();
+					var name=$(".updatedata").find("div:nth-child(2) span:last-child input[type='text']").val().trim();
+					var email=$(".updatedata").find("div:nth-child(3) span:last-child input[type='text']").val().trim();
+					var gongzi=$(".updatedata").find("div:nth-child(4) span:last-child input[type='text']").val().trim();
+					if(id==""||name==""||email==""||gongzi==""){
+						alert("数据不能为空");
+						return;
+					}
+					$("table tr td:nth-child(2)").each(function(){
+						var iid=$(this).text();
+						if(id==iid){
+							$(this).parent().find("td:nth-child(3)").text(name);
+							$(this).parent().find("td:nth-child(4)").text(email);
+							$(this).parent().find("td:nth-child(5)").text(gongzi);
+						}
+					});
+				});
+			});
+	</script>
+</head>
+<body>
+	<header>模拟员工信息管理系统</header>
+	<br>
+	<hr>
+	<br>
+	<hr>
+	<br>
+	<div class="tongyongstyle add">
+		<div>
+			<span>ID</span>
+			<span><input type="text" name="id"></span>
+		</div>
+		<div>
+			<span>姓名</span>
+			<span><input type="text" name="name"></span>
+		</div>
+		<div>
+			<span>邮箱</span>
+			<span><input type="text" name="email"></span>
+		</div>
+		<div>
+			<span>工资</span>
+			<span><input type="text" name="gongzi"></span>
+		</div>
+		<div>
+			<span><button id="buttonadd">添加数据</button></span>
+		</div>
+	</div>
+	<hr>
+	<br>
+	<br>
+	<br>
+	<table cellpadding="0" cellspacing="0" >
+		<tbody>
+			<tr>
+				<th><span>全选</span><input type="checkbox" name="quanxuan"></th>
+				<th>ID</th>
+				<th>姓名</th>
+				<th>邮箱</th>
+				<th>工资</th>
+			</tr>
+			<tr>
+				<td><input type="checkbox" name=""></td>
+				<td>1</td>
+				<td>钓场</td>
+				<td>1693656@qq.com</td>
+				<td>654635</td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" name=""></td>
+				<td>2</td>
+				<td>h干哈是好的</td>
+				<td>546546@123.sin</td>
+				<td>4563214</td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" name=""></td>
+				<td>3</td>
+				<td>h干哈是好的</td>
+				<td>546546@123.sin</td>
+				<td>4563214</td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" name=""></td>
+				<td>4</td>
+				<td>h干哈是好的</td>
+				<td>546546@123.sin</td>
+				<td>4563214</td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" name=""></td>
+				<td>5</td>
+				<td>h干哈是好的</td>
+				<td>546546@123.sin</td>
+				<td>4563214</td>
+			</tr>
+		</tbody>
+	</table>
+	<br>
+	<br>
+	<br>
+	<hr>
+		<a href="#" id="delete">删除选中</a>
+	<br>
+	<hr>
+	<br>
+	<hr>
+	<br>
+	<br>
+	<footer>
+		<div class="tongyongstyle updatedata">
+			<div>
+				<span>ID</span>
+				<span><input type="text" name="id"></span>
+			</div>
+			<div>
+				<span>姓名</span>
+				<span><input type="text" name="name"></span>
+			</div>
+			<div>
+				<span>邮箱</span>
+				<span><input type="text" name="email"></span>
+			</div>
+			<div>
+				<span>工资</span>
+				<span><input type="text" name="gongzi"></span>
+			</div>
+			<div>
+				<span><button id="buttonupdate">修改数据</button></span>
+			</div>
+		</div>
+	</footer>
+</body>
+</html>
