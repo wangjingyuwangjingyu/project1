@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>
+		拼图
+	</title>
+	<style type="text/css">
+		*{
+			margin: 0px;
+			padding: 0px;
+			font-size: 16px;
+		}
+		body,html{
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+		.box{
+			width: 900px;
+			height: 600px;
+			border:3px solid #000;
+			overflow: hidden;
+			margin: 0 auto;
+			margin-top: 100px;
+		}
+		.boximg{
+			box-sizing: border-box;
+			font-size: 0px;
+			width: 300px;
+			height: 200px;
+			/*background: red;*/
+			float: left;
+			border:1px solid #fff;
+			overflow: hidden;
+		}
+		.boximg>img{
+			width: 100%;
+			height: 100%;
+		}
+		.submit{
+			cursor: pointer;
+			padding: 10px 15px;
+			float: right;
+			margin-right: 10px;
+			margin-top: 10px;
+			background: #4f8dfe;
+			border-radius: 10px;
+			color: #fff;
+			font-size: 18px;
+		}
+	</style>
+</head>
+<body>
+	<div class="submit">直接拼好图片</div>
+</body>
+</html>
+<script type="text/javascript">
+	window.onload=function() {
+		var doc=document.body;
+		var box=document.createElement("div");
+		box.className="box";
+		doc.appendChild(box);
+		var imgs=[
+			// {
+			// 	url:"11",
+			// 	flag:false
+			// },
+		];
+		var boximg=[];
+		for(var j=1;j<9;j++){
+			imgs[j-1]={
+				url:j+""+j,
+				flag:false
+			};
+		}
+		for(var i=0;i<9;i++){
+			var div=document.createElement("div");
+			div.className="boximg";
+			if(i<8){
+				var r;
+				do{
+					r=Math.floor(Math.random()*8);
+				}while(imgs[r].flag)
+				div.innerHTML="<img src='.\\/"+imgs[r].url+".jpg'>";
+				imgs[r].flag=true;
+			}
+			if(i==8){
+				div.className="boximg teboximg";
+				// div.style.cssText="background:red;";
+			}
+			boximg[boximg.length]=div;
+			box.appendChild(div);
+		}
+		function jiaohuan(thbox,hbox){
+			hbox.className=thbox.className;
+					thbox.innerHTML=hbox.innerHTML;
+					hbox.innerHTML="";
+					thbox.className="boximg";
+		}
+		window.onkeydown=function(e){
+			var e=window.event||e;
+			var key=e.keyCode;
+			var boximgs=document.querySelectorAll(".boximg");
+			var index;
+			var thbox=document.getElementsByClassName("teboximg")[0];
+			for(var i=0;i<9;i++){
+					if(boximgs[i].className=="boximg teboximg"){
+						index=i;
+						break;
+					}
+				}
+			if(key==40){
+				var hbox=boximgs[index-3];
+				if((index-3)>=0){
+					jiaohuan(thbox,hbox);
+				}
+			}else if(key==38){
+				var hbox=boximgs[index+3];
+				if((index+3)<9){
+					jiaohuan(thbox,hbox);
+				}
+			}else if(key==39){
+				var hbox=boximgs[index-1];
+				if((index-1)>=0&&((index-1)!=2&&index!=3&&(index-1)!=5&&index!=6)){
+					jiaohuan(thbox,hbox);
+				}
+			}else if(key==37){
+				var hbox=boximgs[index+1];
+				if((index+1)<9&&((index+1)!=3&&index!=2&&(index+1)!=6&&index!=5)){
+					jiaohuan(thbox,hbox);
+				}
+			}
+		}
+		//1 4 7
+		//2 5 8
+		//3 6 9
+		var submit=document.getElementsByClassName("submit")[0];
+		submit.onclick=function(){
+			(function dianji(){
+				var boxs=document.querySelectorAll(".boximg");
+				var index=0;
+				for(var i=0;i<3;i++){
+					for(var j=0;j<3;j++){
+						if(((i+1)+(j*3))<=8){
+							boxs[index++].innerHTML="<img src='.\\/"+((i+1)+(j*3))+""+((i+1)+(j*3))+".jpg'/>";
+						}
+					}
+				}
+			})();
+		}
+	}
+</script>

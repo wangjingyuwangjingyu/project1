@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>五子棋(人工智能战)</title>
+	<style type="text/css">
+		*{
+			margin: 0px;
+			padding: 0px;
+		}
+		body,html{
+			width: 100%;
+			height: 100%;
+			background: #000;
+			background-image: url(./1.jpg);
+			background-size: 125%;
+		}
+		header{
+			height: 100px;
+			width: 100%;
+			font-size: 50px;
+			line-height: 100px;
+			background: #555;
+			opacity: 0.5;
+			color: #fff;
+			text-align: center;
+		}
+		#can{
+			width: 600px;
+			height: 600px;
+			margin: 10px;
+			border:2px solid red;
+			cursor: pointer;
+		}
+		.box{
+			width: 620px;
+			height: 620px;
+			border:3px solid red;
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			right: 0px;
+			bottom: 0px;
+			margin: auto;
+			background:rgba(0,0,0,0.5);
+		}
+		.header{
+			height: 100px;
+			width: 100%;
+			font-size: 50px;
+			line-height: 100px;
+			color:#fff;
+			position: absolute;
+			left: 0px;
+			top: 0px;
+			z-index: 99999;
+			text-align: center;
+		}
+		.success{
+			width: 1000px;
+			height: 200px;
+			position: absolute;
+			z-index: 9999999999999;
+			line-height: 200px;
+			text-align: center;
+			top: 0px;
+			left: 0px;
+			right: 0px;
+			bottom: 0px;
+			margin: auto;
+			font-size: 100px;
+			color: red;
+		}
+	</style>
+</head>
+<body>
+	<div class="header">
+		五子棋 VS 人工智能
+	</div>
+	<header>
+		
+	</header>
+	<div class="box">
+		<canvas id="can">您的浏览器不支持</canvas>
+	</div>
+</body>
+</html>
+<script type="text/javascript" src="./jquery-1.4.2.js"></script>
+<script type="text/javascript">
+	window.onload=function() {
+		(function(){
+			var self;
+			function game(){
+				this.wc=$(document.body).attr("clientWidth");
+				this.wh=$(document.body).attr("clientHeight");
+				this.can=$("#can")[0];
+				this.draw=this.can.getContext("2d");
+				this.mainqipang=[];
+				this.t1;
+				this.me;
+				this.ai;						
+				this.successflag=false;
+				this.successname="";
+				this.aix;
+				this.aiy;
+				self=this;
+			}
+			game.prototype.play=function(){
+				var self=this;
+				self.load();
+				self.ME();
+			}
+			game.prototype.load=function(){
+				var self=this;
+				self.can.width=600;
+				self.can.height=600;
+				var index=1;
+				for(var i=0;i<11;i++){
+					var arr=[];
+					for(var j=0;j<11;j++){
+						arr[j]={
+							id:index,
+							x:(i+0)*60,
+							y:(j+0)*60,
+							aix:i,
+							aiy:j,
+							sheide:"",
+							size:20,
+							color:"",
+							data:false
+						};
+						index++;
+					}
+					self.mainqipang[i]=arr;
+				}
+				console.dir(self.mainqipang);
+				self.huabu();
+				self.t1=window.setInterval(function(){
+					self.flushdatadraw();
+				},100);
+			}
+			game.prototype.flushdatadraw=function(){
+				var self=this;
+				self.draw.clearRect(0,0,self.can.width,self.can.height);
+				self.huabu();
+				for(var i=0;i<self.mainqipang.length;i++){
+					for(var j=0;j<self.mainqipang[i].length;j++){
+						if(self.mainqipang[i][j].sheide!=""){
+							self.draw.beginPath();
+							self.draw.arc(self.mainqipang[i][j].x+1,self.mainqipang[i][j].y+1,self.mainqipang[i][j].size,0,Math.PI*2);
+							self.draw.fillStyle="#aaa";
+							self.draw.fill();
+							self.draw.closePath();
+							self.draw.beginPath();
+							self.draw.arc(self.mainqipang[i][j].x,self.mainqipang[i][j].y,self.mainqipang[i][j].size,0,Math.PI*2);
+							self.draw.fillStyle=self.mainqipang[i][j].color;
+							self.draw.fill();
+							self.draw.closePath();
+						}
+					}
+				}
+				self.success();
+			}
+			game.prototype.success=function(){
+				//竖判断
+				for(var i=0;i<self.mainqipang.length;i++){
+					var index=1;
+					var flag=self.mainqipang[i][0].sheide;
+					for(var j=1;j<self.mainqipang[i].length;j++){
+						if(flag!=""){
+							if(flag==self.mainqipang[i][j].sheide){
+								index++;
+							}else{
+								index=1;
+								flag=self.mainqipang[i][j].sheide;
+							}
+							if(index==5){
+								self.successflag=true;
+								self.successname=self.mainqipang[i][j].sheide;
+								break;
+							}
+						}else{
+							flag=self.mainqipang[i][j].sheide;
+						}
+					}
+					if(self.successflag){
+						break;
+					}
+				}
+				//横判断
+				for(var i=0;i<self.mainqipang.length;i++){
+					var index=1;
+					var flag=self.mainqipang[i][0].sheide;
+					for(var j=0;j<self.mainqipang[i].length;j++){
+						if(flag!=""){
+							if(flag==self.mainqipang[j][i].sheide){
+								index++;
+							}else{
+								index=1;
+								flag=self.mainqipang[j][i].sheide;
+							}
+							if(index==5){
+								self.successflag=true;
+								self.successname=self.mainqipang[j][i].sheide;
+								break;
+							}
+						}else{
+							flag=self.mainqipang[j][i].sheide;
+						}
+					}
+					if(self.successflag){
+						break;
+					}
+				}
+				//胜利
+				if(self.successflag){
+					if(self.successname=="AI"){
+						window.clearInterval(self.t1);
+						$(document.body).append("<div class='success'>人工智能超越人类</div>");
+					}else{
+						window.clearInterval(self.t1);
+						$(document.body).append("<div class='success'>恭喜你战胜了人工智能</div>");
+					}
+				}
+			}
+			game.prototype.huabu=function(){
+				var self=this;
+				self.draw.beginPath();
+				self.draw.moveTo(0,60);
+				self.draw.lineTo(600,60);
+				self.draw.moveTo(0,120);
+				self.draw.lineTo(600,120);
+				self.draw.moveTo(0,180);
+				self.draw.lineTo(600,180);
+				self.draw.moveTo(0,240);
+				self.draw.lineTo(600,240);
+				self.draw.moveTo(0,300);
+				self.draw.lineTo(600,300);
+				self.draw.moveTo(0,360);
+				self.draw.lineTo(600,360);
+				self.draw.moveTo(0,420);
+				self.draw.lineTo(600,420);
+				self.draw.moveTo(0,480);
+				self.draw.lineTo(600,480);
+				self.draw.moveTo(0,540);
+				self.draw.lineTo(600,540);
+				self.draw.moveTo(60,0);
+				self.draw.lineTo(60,600);
+				self.draw.moveTo(120,0);
+				self.draw.lineTo(120,600);
+				self.draw.moveTo(180,0);
+				self.draw.lineTo(180,600);
+				self.draw.moveTo(240,0);
+				self.draw.lineTo(240,600);
+				self.draw.moveTo(300,0);
+				self.draw.lineTo(300,600);
+				self.draw.moveTo(360,0);
+				self.draw.lineTo(360,600);
+				self.draw.moveTo(420,0);
+				self.draw.lineTo(420,600);
+				self.draw.moveTo(480,0);
+				self.draw.lineTo(480,600);
+				self.draw.moveTo(540,0);
+				self.draw.lineTo(540,600);
+				self.draw.strokeStyle="red";
+				self.draw.lineWidth="1px";
+				self.draw.stroke();
+				self.draw.closePath();
+			}
+			game.prototype.event=function(){
+				var self=this;
+				self.can.onmousemove=function(e){
+					var event=window.event||e?window.event:e;
+					var x=event.offsetX; 
+					var y=event.offsetY;
+					self.can.onclick=function(){
+						for(var i=0;i<self.mainqipang.length;i++){
+							for(var j=0;j<self.mainqipang[i].length;j++){
+								var rx=Math.abs(self.mainqipang[i][j].x-x);
+								var ry=Math.abs(self.mainqipang[i][j].y-y);
+								var r=Math.sqrt(Math.pow(rx,2)+Math.pow(ry,2));
+								if(self.mainqipang[i][j].size>=r&&self.mainqipang[i][j].sheide==""){
+									self.mainqipang[i][j].sheide="ME";
+									self.mainqipang[i][j].color="#000";
+									self.mainqipang[i][j].data=true;
+									//AI人类不允许下棋
+									self.me=self.ME; 
+									self.ME=function(){}
+									window.setTimeout(function(){
+										self.AI();
+									},500);
+								}
+							}
+						}
+					}
+				}
+			}
+			game.prototype.ME=function(){
+				var self=this;
+				self.event();
+			}
+			game.prototype.AI=function(){
+				var self=this;
+				//先随机下
+				var rx,ry;
+
+				// var flag="";
+				// do{
+				// 	rx=Math.floor(Math.random()*11);
+				// 	ry=Math.floor(Math.random()*11);
+				// 	flag=self.mainqipang[rx][ry].sheide;
+				// }while(flag!=="");
+				// self.mainqipang[rx][ry].sheide="AI";
+				// self.mainqipang[rx][ry].color="#fff";
+				// self.mainqipang[rx][ry].data=true;
+				//AIsee
+				self.AIsee();
+				console.dir(self.aiy+"---------"+self.aiy);
+				self.mainqipang[self.aix][self.aiy].sheide="AI";
+				self.mainqipang[self.aix][self.aiy].color="#fff";
+				self.mainqipang[self.aix][self.aiy].data=true;
+				//AI下完棋
+				self.ME=self.me;
+			}
+			game.prototype.AIsee=function(){
+				//竖判断
+				var shupanduanarr=[];
+				for(var i=0;i<self.mainqipang.length;i++){
+					for(var j=0;j<self.mainqipang[i].length-4;j++){
+						var aindex=0;
+						var mindex=0;
+						var arrflag=[];
+						var caozuos=[];
+						arrflag[0]=self.mainqipang[i][j];
+						arrflag[1]=self.mainqipang[i][j+1];
+						arrflag[2]=self.mainqipang[i][j+2];
+						arrflag[3]=self.mainqipang[i][j+3];
+						arrflag[4]=self.mainqipang[i][j+4];
+						console.dir(arrflag);
+						for(var k=0;k<arrflag.length;k++){
+							if(arrflag[k].sheide=="AI"){
+								aindex++;
+							}else if(arrflag[k].sheide=="ME"){
+								mindex++;
+							}
+							if(arrflag[k].sheide==""){
+								caozuos[caozuos.length]={
+									x:arrflag[k].aix,
+									y:arrflag[k].aiy
+								}
+							}
+						}
+						arrflag[5]={
+							aindex:aindex,
+							mindex:mindex,
+						}
+						arrflag[6]=caozuos;
+						shupanduanarr[shupanduanarr.length]=arrflag;
+					}
+				}
+				console.dir(shupanduanarr);
+				for(var i=0;i<shupanduanarr.length;i++){
+					if(shupanduanarr[i].aindex>=3){
+						self.aix=shupanduanarr[i].caozuos[Math.floor(Math.random()*shupanduanarr[i].caozuos.length)].x;
+						self.aiy=shupanduanarr[i].caozuos[Math.floor(Math.random()*shupanduanarr[i].caozuos.length)].y;
+					}else if(shupanduanarr[i].mindex>=1){
+						self.aix=shupanduanarr[i].caozuos[Math.floor(Math.random()*shupanduanarr[i].caozuos.length)].x;
+						self.aiy=shupanduanarr[i].caozuos[Math.floor(Math.random()*shupanduanarr[i].caozuos.length)].y;
+					}else{
+						do{
+							self.aix=Math.floor(Math.random()*self.mainqipang.length);
+							self.aiy=Math.floor(Math.random()*self.mainqipang.length);
+						}while(self.mainqipang[self.aix][self.aiy].sheide!="");
+					}
+				}
+
+
+				if(!self.aix&&!self.aiy){
+					do{
+						self.aix=Math.floor(Math.random()*self.mainqipang.length);
+						self.aiy=Math.floor(Math.random()*self.mainqipang.length);
+					}while(self.mainqipang[self.aix][self.aiy].sheide!="");
+				}
+				if(self.mainqipang[self.aix][self.aiy].sheide!=""){
+					self.AIsee();
+				}
+
+
+			}
+
+			var game=new game();
+			game.play();
+
+		})()
+	}
+</script>
