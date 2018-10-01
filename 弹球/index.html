@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<style type="text/css">
+		*{
+			margin: 0px;
+			padding: 0px;
+		}
+		body,html{
+			width: 100%;
+			height: 100%;
+			position: relative;
+		}
+		#can{
+			background: black;
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			right: 0px;
+			bottom: 0px;
+			margin:auto;
+			border: 5px solid #ccc;
+			cursor: e-resize;
+			box-shadow: 10px 10px #eee;
+		}
+		.msg{
+			width: 100px;
+			height: 100px;
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			right: 0px;
+			bottom: 0px;
+			margin:auto;
+			border: 5px solid yellow;
+			font-size: 50px;
+			line-height: 100px;
+			font-weight: bold; 
+			color: yellow;
+			text-align: center;
+			border-radius: 100%;
+		}
+		#failbox{
+			width: 300px;
+			height: 50px;
+			font-size: 40px;
+			font-weight: bold;
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			right: 0px;
+			bottom: 0px;
+			margin:auto;
+			color: #ccc;
+			text-align: center;
+			transition:opacity 1s;
+			opacity: 0;
+		}
+		header{
+			width: 100%;
+			height: 100px;
+			float: left;
+			font-size:55px;
+			text-align: center;
+			line-height: 100px;
+			color: #fff;
+			background: rgba(0,0,0,0.5);
+		}
+	</style>
+</head>
+<body>
+	<header>打弹球</header>
+	<canvas id="can">
+		你的浏览器不支持，亲下载最新浏览器!
+	</canvas>
+	<div id="failbox">失败了,在<span style="color: yellow;font-size: 50px;">来战!</span></div>
+</body>
+</html>
+<script type="text/javascript">
+	window.onload=function(){
+		(function(){
+			function game(){
+				this.failbox=document.getElementById("failbox");
+				this.doc=document.documentElement;
+				this.can=document.getElementById("can");
+				this.drawing=this.can.getContext("2d");
+				this.cw=300;
+				this.ch=600;
+				this.wlength=27;
+				this.hlength=30
+				this.guanagrr=[];
+				this.liwu=[];
+				this.divarr=[];
+				this.bang={
+					x:125,
+					y:550,
+					w:50,
+					h:5,
+					color:"#fff",
+					circle:{
+						x:145,
+						y:540,
+						xv:1,
+						yv:-2,
+						size:5,
+						color:"#ccc",
+					}
+				};
+			}
+			game.prototype.load=function() {
+				var self=this;
+				self.can.width=self.cw;
+				self.can.height=self.ch;
+				self.bang.x=Math.floor(Math.random()*250);
+				self.bang.circle.x=self.bang.x+Math.floor(Math.random()*50);
+				var ram=Math.floor(Math.random()*5);
+				if (ram==2||ram==5) {
+					self.bang.circle.xv*=-1;
+				}
+				var index=1;
+				for(var i=0;i<self.hlength;i++){
+					var arr=[];
+					for(var j=0;j<self.wlength;j++){
+						arr[j]={
+							id:index,
+							x:j,
+							y:i,
+							xs:j*11+6,
+							ys:i*11+6,
+							color:"red",
+							data:"rgba("+Math.floor(Math.random()*255+1)+","+Math.floor(Math.random()*255+1)+","+Math.floor(Math.random()*255+1)+",0.8)",
+							size:5,
+							liwu:Math.ceil(Math.random()*10-5),
+							flag:true
+						};
+						index++;
+					}
+					self.guanagrr[i]=arr;
+				}
+				//模式选择
+				var model=[0,1,2,3,4,5,6,7,8,9];
+				var rmodel=Math.floor(Math.random()*3);
+				switch(model[rmodel]){
+					case 0:
+						for(var i=0;i<self.guanagrr.length;i++){
+							for(var j=i;j<self.guanagrr[i].length;j++){
+								self.guanagrr[i][j].color="blue";
+							}
+						}
+					break;
+					case 1:
+						for(var i=0;i<self.guanagrr.length;i++){
+							for(var j=i;j<self.guanagrr[i].length;j++){
+								if(i<=5&&j<=5||i>=10&&j>=10){
+									self.guanagrr[i][j].color="#fff";
+								}
+							}
+						}
+					break;
+					case 2:
+						for(var i=0;i<self.guanagrr.length;i++){
+							for(var j=i;j<self.guanagrr[i].length;j++){
+								self.guanagrr[i][j].color="pink";
+							}
+						}
+					break;
+					default:
+				}
+				
+				self.animate();
+			};
+			game.prototype.play=function(){
+				var self=this;
+				self.load();
+				self.t1=window.setInterval(function(){
+					self.animate();
+				},100);
+				self.shubiao();
+			}
+			game.prototype.shubiao=function(){
+				var self=this;
+				self.can.onmousemove=function(e){
+					var move=window.event||e;
+					var x=move.offsetX;
+					var y=move.offsetY;
+					self.bang.x=x;
+				}
+			}
+			game.prototype.animate=function(){
+				var self=this;
+				self.bang.circle.x=self.bang.circle.xv*10+self.bang.circle.x;
+				self.bang.circle.y=self.bang.circle.yv*10+self.bang.circle.y;
+				if(self.bang.circle.y>=(self.bang.y-10)&&self.bang.circle.y<=self.bang.y&&self.bang.circle.x>=self.bang.x&&self.bang.circle.x<=(self.bang.x+self.bang.w)){
+					self.bang.circle.yv*=-1;
+					self.bang.circle.y=545;
+				}
+				for(var i=0;i<self.guanagrr.length;i++){
+					for(var j=0;j<self.guanagrr[i].length;j++){
+						var x=Math.abs(self.guanagrr[i][j].xs-self.bang.circle.x);
+						var y=Math.abs(self.guanagrr[i][j].ys-self.bang.circle.y);
+						var r=Math.sqrt(Math.pow(x,2)+Math.pow(y,2));
+						if(r<=(self.bang.circle.size*2)){
+							//打中小球后
+							self.bang.circle.yv*=-1;
+							if(self.guanagrr[i][j].data!=null){
+								self.liwu[self.liwu.length]={
+									xs:self.guanagrr[i][j].xs,
+									ys:self.guanagrr[i][j].ys,
+									color:self.guanagrr[i][j].data,
+									size:5,
+									flag:true
+								};
+							}
+							//删除小球
+							self.guanagrr[i][j].flag=false;
+							self.guanagrr[i].splice(j,1);
+						}
+					}
+				}
+				if(self.bang.circle.x<0){
+					self.bang.circle.x=0;
+					self.bang.circle.xv*=-1;
+				}
+				if(self.bang.circle.x>(self.cw-(self.bang.circle.size*2))){
+					self.bang.circle.x=(self.cw-(self.bang.circle.size*2));
+					self.bang.circle.xv*=-1;
+				}
+				if(self.bang.circle.y<0){
+					self.bang.circle.y=0;
+					self.bang.circle.yv*=-1;
+				}
+				if(self.bang.circle.y>self.ch){
+					window.clearInterval(self.t1);
+					self.failbox.style.opacity=1;
+				}
+				//礼物下落
+				for(var i=0;i<self.liwu.length;i++){
+					self.liwu[i].ys=self.liwu[i].ys+5;
+					if(self.liwu[i].ys>=self.ch){
+						self.liwu.splice(i,1);
+					}
+					if(self.liwu[i].ys>=(self.bang.y-10)&&self.liwu[i].ys<=self.bang.y&&self.liwu[i].xs>=self.bang.x&&self.liwu[i].xs<=(self.bang.x+self.bang.w)){
+						self.divarr[self.divarr.length]=document.createElement("div");
+						var index=self.divarr.length-1;
+						self.divarr[index].className="msg";
+						self.divarr[index].innerHTML="+1";
+						self.doc.appendChild(self.divarr[index]);
+						window.setTimeout(function(){
+							for(var i=0;i<self.divarr.length;i++){
+								self.doc.removeChild(self.divarr[i]);
+							}
+							self.divarr=[];
+						},1000);
+						console.dir(self.divarr);
+						self.liwu.splice(i,1);
+					}
+				}
+				//渲染
+				self.drawing.clearRect(0,0,self.cw,self.ch);
+				for(var i=0;i<self.guanagrr.length;i++){
+					for(var j=0;j<self.guanagrr[i].length;j++){
+						self.drawing.beginPath();
+						self.drawing.arc(self.guanagrr[i][j].xs,self.guanagrr[i][j].ys,self.guanagrr[i][j].size,0,2*Math.PI);
+						self.drawing.fillStyle=self.guanagrr[i][j].color;
+						self.drawing.fill();
+						self.drawing.closePath();
+					}
+				}
+				for(var i=0;i<self.liwu.length;i++){
+					self.drawing.beginPath();
+					var size=self.liwu[i].size*2;
+					self.drawing.rect(self.liwu[i].xs,self.liwu[i].ys,size,size);
+					self.drawing.fillStyle=self.liwu[i].color;
+					self.drawing.lineWidth="3";
+					self.drawing.strokeStyle="rgb("+Math.floor(Math.random()*255+1)+","+Math.floor(Math.random()*255+1)+","+Math.floor(Math.random()*255+1)+")";
+					self.drawing.stroke();
+					self.drawing.fill();
+					self.drawing.closePath();
+				}
+				self.drawing.beginPath();
+				self.drawing.rect(self.bang.x,self.bang.y,self.bang.w,self.bang.h);
+				self.drawing.fillStyle=self.bang.color;
+				self.drawing.fill();
+				self.drawing.closePath();
+				self.drawing.beginPath();
+				self.drawing.arc(self.bang.circle.x,self.bang.circle.y,self.bang.circle.size,0,2*Math.PI);
+				self.drawing.fillStyle=self.bang.circle.color;
+				self.drawing.fill();
+				self.drawing.closePath();
+			}
+			//开始游戏
+			var game=new game();
+			game.play();
+		})()
+	}
+</script>

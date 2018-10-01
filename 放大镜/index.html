@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>
+		放大镜
+	</title>
+	<style type="text/css">
+		*{
+			margin: 0px;
+			padding: 0px;
+			font-size: 16px;
+		}
+		body,html{
+			width: 100%;
+			height: 100%;
+			position: absolute;
+		}
+		#can{
+			width: 600px;
+			height: 600px;
+			position: absolute;
+			left: 0px;
+			top: 0px;
+		}
+		.yuantu{
+			width: 378px;
+			height: 236px;
+			overflow: hidden;
+			margin-top: 200px;
+			margin-left: 100px;
+			border: 5px solid #000;
+			border-radius: 10px;
+			cursor: crosshair;
+			position: relative;
+		}
+		.yuantu>img{
+			width: 100%;
+		}
+		.bigbox{
+			width:300px;height:300px;transition:opacity 1s;opacity:0;
+			position: absolute;
+			top: 200px;
+			overflow: hidden;
+			left: 600px;
+			font-size: 0px;
+		}
+		.bigbox img{
+			display: block;
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			transition: top 0.1s,left 0.1s;
+		}
+		.shubiao{
+			position: fixed;
+			width: 50px;
+			height: 50px;
+			background: red;
+			opacity: 0.5;
+			bottom:  0px;
+			right: 0px;
+			display: none;
+			z-index: 99999999;
+			/*transition: top 0.1s,left 0.1s;*/
+		}
+		.bottombox{
+			margin-bottom: 0px;
+			width: 994px;
+			height: 75px;
+			margin: 0px auto;
+		}
+		.bottombox img{
+			position: relative;
+			width:120px;
+			margin-right: : 10px;
+			font-size: 0px;
+			height:75px;
+			border-radius: 100%;
+			cursor: pointer;
+		}
+		.bottombox img:first-child{
+			margin: 0px;
+		}
+		.bb{
+			position: absolute;
+			bottom: 10px;
+			width: 100%;
+		}
+	</style>
+</head>
+<body>
+	
+	<div class="yuantu">
+		<div class="shubiao"></div>
+		<img src="./5.jpg">
+	</div>
+	<div class="bb">
+		<div class="bottombox">
+			<img src="./1.jpg">
+			<img src="./2.jpg">
+			<img src="./3.jpg">
+			<img src="./4.jpg">
+			<img src="./5.jpg">
+			<img src="./6.jpg">
+			<img src="./7.jpg">
+			<img src="./8.jpg">
+		</div>
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+	window.onload=function() {			
+		(function(){
+			var doc=document.body;
+			var yuantu=document.getElementsByClassName("yuantu")[0];
+			var box=document.createElement("div");
+			var left=yuantu.offsetLeft;
+			var top=yuantu.offsetTop;
+			box.innerHTML="<img src='./5.jpg'>";
+			box.className="bigbox";
+			doc.appendChild(box);
+			var boximg;
+			var shubiao;
+			yuantu.onmouseover=function(){
+				boximg=document.querySelector(".bigbox img");
+				shubiao=document.querySelector(".shubiao");
+				box.style.cssText="opacity:1;";
+				shubiao.style.cssText="top:0px;left:0px;display:block;";
+				doc.onmousemove=function(e){
+					var event=window.event||e;
+					var x=event.offsetX+left-22;
+					var y=event.offsetY+top-22;
+					shubiao.style.cssText="top:"+y+"px;left:"+x+"px;display:block;";
+				}
+			}
+			//1920*1080
+			//378*236
+			yuantu.onmousemove=function(e){
+				var event=window.event||e;
+				var x=event.layerX;
+				var y=event.layerY;
+				boximg.style.cssText="top:-"+((y*5.07)-(50*5.07))+"px;left:-"+((x*4.57)-(10*4.57))+"px;";
+				yuantu.onmouseout=function(e){
+					box.style.cssText="opacity:0;";
+					shubiao.style.cssText="display:none;";
+					doc.onmousemove=null;
+				}
+			}
+			var xx=document.querySelectorAll(".bottombox>img");
+			var ysimg=document.querySelector(".yuantu>img");
+			var bbimg=document.querySelector(".bigbox>img");
+			for(var i=0;i<xx.length;i++){
+				xx[i].index=i;
+				xx[i].onclick=function(){
+					ysimg.src=this.src;
+					bbimg.src=this.src;
+				}
+			}
+		})();
+	}
+</script>

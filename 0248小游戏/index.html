@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<style type="text/css">
+		#can{
+			border: 3px solid red;
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			right: 0px;
+			bottom: 0px;
+			margin: auto;
+			/*background: rgba(255,255,255,0.5);*/
+			opacity: 0.5;
+			z-index: 999999;
+			background: yellow;
+			border-radius: 10px;
+		}
+		body{
+			background: #000;
+			overflow: hidden;
+			background-image: url(./1.jpg);
+			transition: background-image 1s;
+		}
+		#tatle{
+			width: 100%;
+			height: 100px;
+			position: absolute;
+			font-size: 60px;
+			color: #fff;
+			text-align: center;
+			line-height: 100px;
+			opacity: 0.7;
+			top: 0px;
+			left: 0px;
+			background: #000;
+			z-index: 9999999;
+		}
+		#box{
+			position: absolute;
+			bottom: 0px;
+			left: 0px;
+			margin: auto;
+			width: 100%;
+			height: 120px;
+			background: pink;
+			z-index: 9999998;
+			border-top: 1px solid #fff;
+		}
+		#box img{
+			font-size: 0px;
+			float: left;
+			margin-top: 5px;
+			display: inline-block;
+			height: 110px;
+			width: 180px;
+			margin-right: 10px;
+			cursor: pointer;
+			border: 2px solid #fff;
+			transition: top 0.5s,width 0.3s,height 0.3s,opacity 0.5s,box-shadow 1s;
+			border-radius: 3px;
+			opacity: 0.6;
+		}
+		#box img{
+			margin-left: 10px;
+		}
+		#box img:hover{
+			position: relative;
+			width: 200px;
+			height: 130px;
+			top: -40px;
+			border: 5px solid #fff;
+			box-shadow: 5px 5px #ccc;
+			opacity: 1;
+		}
+	</style>
+</head>
+<body>
+	<div id="tatle">2048&nbsp;小游戏</div>
+	<canvas id="can"></canvas>
+	<div id="box">
+		<img src="1.jpg" class="img1 img">
+		<img src="2.jpg" class="img2 img">
+		<img src="3.jpg" class="img3 img">
+		<img src="4.jpg" class="img4 img">
+		<img src="5.jpg" class="img5 img">
+		<img src="6.jpg" class="img6 img">
+		<img src="7.jpg" class="img7 img">
+		<img src="8.jpg" class="img8 img">
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+	var self=this;
+	function game(){
+		this.clientw=document.documentElement.clientWidth;
+		this.clienth=document.documentElement.clientHeight;
+		this.can=document.getElementById("can");
+		this.draw=this.can.getContext("2d");
+		this.mainobject=[];
+		this.t1;
+		this.w=600;
+		this.h=600;
+		self=this;
+	}
+	game.prototype.load=function(){
+		var self=this;
+		self.can.width=self.w;
+		self.can.height=self.h;
+		self.huaban();
+		var index=1;
+		for(var i=0;i<3;i++){
+			var arr=[];
+			for(var j=0;j<3;j++){
+				arr[j]={
+					id:index,
+					x:j*200+65,
+					y:i*200+120,
+					data:"",
+				}
+				index++;
+			}
+			self.mainobject[i]=arr;
+		}
+		console.dir(self.mainobject);
+		var rx=Math.floor(Math.random()*3);
+		var ry=Math.floor(Math.random()*3);
+		self.mainobject[rx][ry].data="2";
+		self.t1=window.setInterval(self.drawtext,100);
+		self.event();
+	}
+	game.prototype.drawtext=function(){
+		self.draw.clearRect(0,0,self.w,self.h);
+		for(var i=0;i<3;i++){
+			for(var j=0;j<3;j++){
+				self.draw.beginPath();
+				self.draw.font="120px Georgia";
+				self.draw.fillStyle="blue";
+				self.draw.fillText(self.mainobject[i][j].data,self.mainobject[i][j].x,self.mainobject[i][j].y);
+				self.draw.fill();
+				self.draw.closePath();
+			}
+		}
+		self.huaban();
+	}
+	game.prototype.huaban=function(){
+		var self=this;
+		self.draw.strokeStyle="red";
+		self.draw.lineWidth="3";
+		self.draw.beginPath();
+		self.draw.moveTo(200,0);
+		self.draw.lineTo(200,600);
+		self.draw.stroke();
+		self.draw.closePath();
+		self.draw.beginPath();
+		self.draw.moveTo(400,0);
+		self.draw.lineTo(400,600);
+		self.draw.stroke();
+		self.draw.closePath();
+		self.draw.beginPath();
+		self.draw.moveTo(0,200);
+		self.draw.lineTo(600,200);
+		self.draw.stroke();
+		self.draw.closePath();
+		self.draw.beginPath();
+		self.draw.moveTo(0,400);
+		self.draw.lineTo(600,400);
+		self.draw.stroke();
+		self.draw.closePath();
+	}
+	game.prototype.data=function(){
+		var self=this;
+
+	}
+	game.prototype.event=function(){
+		var self=this;
+		window.onkeydown=function(e){
+			var event=window.event||e?window.event:event;
+			var keycode=event.keyCode;
+			if(keycode==38){
+				//shang
+				for(var i=2;i>=0;i--){
+					for(var j=2;j>0;j--){
+						if(parseInt(self.mainobject[j-1][i].data)==parseInt(self.mainobject[j][i].data)){
+							self.mainobject[j-1][i].data=parseInt(self.mainobject[j-1][i].data)+parseInt(self.mainobject[j][i].data);
+							self.mainobject[j][i].data="";
+						}
+					}
+				}
+				for(var i=2;i>=0;i--){
+					for(var j=2;j>0;j--){
+						if(self.mainobject[j-1][i].data==""&&self.mainobject[j][i].data!=""){
+							self.mainobject[j-1][i].data=parseInt(self.mainobject[j][i].data);
+							self.mainobject[j][i].data="";
+						}
+					}
+				}
+				self.newadd();
+			}
+			if(keycode==40){
+				//xia
+				for(var i=0;i<=2;i++){
+					for(var j=0;j<2;j++){
+						if(parseInt(self.mainobject[j+1][i].data)==parseInt(self.mainobject[j][i].data)){
+							self.mainobject[j+1][i].data=parseInt(self.mainobject[j+1][i].data)+parseInt(self.mainobject[j][i].data);
+							self.mainobject[j][i].data="";
+						}
+					}
+				}
+				for(var i=0;i<=2;i++){
+					for(var j=0;j<2;j++){
+						if(self.mainobject[j+1][i].data==""&&self.mainobject[j][i].data!=""){
+							self.mainobject[j+1][i].data=parseInt(self.mainobject[j][i].data);
+							self.mainobject[j][i].data="";
+						}
+					}
+				}
+				self.newadd();
+			}
+			if(keycode==37){
+				//zuo
+				for(var i=2;i>=0;i--){
+					for(var j=2;j>0;j--){
+						if(parseInt(self.mainobject[i][j-1].data)==parseInt(self.mainobject[i][j].data)){
+							self.mainobject[i][j-1].data=parseInt(self.mainobject[i][j-1].data)+parseInt(self.mainobject[i][j].data);
+							self.mainobject[i][j].data="";
+						}
+					}
+				}
+				for(var i=2;i>=0;i--){
+					for(var j=2;j>0;j--){
+						if(self.mainobject[i][j-1].data==""&&self.mainobject[i][j].data!=""){
+							self.mainobject[i][j-1].data=parseInt(self.mainobject[i][j].data);
+							self.mainobject[i][j].data="";
+						}
+					}
+					
+				}
+				self.newadd();
+			}
+			if(keycode==39){
+				//you
+				for(var i=0;i<2;i++){
+					for(var j=0;j<=2;j++){
+						if(parseInt(self.mainobject[j][i+1].data)==parseInt(self.mainobject[j][i].data)){
+							self.mainobject[j][i+1].data=parseInt(self.mainobject[j][i+1].data)+parseInt(self.mainobject[j][i].data);
+							self.mainobject[j][i].data="";
+						}
+					}
+				}
+				for(var i=0;i<2;i++){
+					for(var j=0;j<=2;j++){
+						if(self.mainobject[j][i+1].data==""&&self.mainobject[j][i].data!=""){
+							self.mainobject[j][i+1].data=parseInt(self.mainobject[j][i].data);
+							self.mainobject[j][i].data="";
+						}
+					}
+				}
+				self.newadd();
+			}
+		}
+	}
+	game.prototype.newadd=function(){
+		var self=this;
+		do{
+			var rx=Math.floor(Math.random()*3);
+			var ry=Math.floor(Math.random()*3);
+		}while(self.mainobject[rx][ry].data!="");
+		self.mainobject[rx][ry].data="2";
+		self.t1=window.setInterval(self.drawtext,100);
+	}
+	game.prototype.play=function(){
+		var self=this;
+		self.load();
+	}
+	var game=new game();
+	game.play();
+	//图片处理
+	var box=document.getElementById("box");
+	var imgs=document.getElementsByClassName("img");
+	var body=document.documentElement;
+	for(var i=0;i<imgs.length;i++){
+		imgs[i].index=i+1;
+		imgs[i].onclick=function(){
+			body.style.backgroundImage="url(./"+this.index+".jpg)";
+		}
+	}
+</script>
